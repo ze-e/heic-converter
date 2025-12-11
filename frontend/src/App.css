@@ -1,0 +1,54 @@
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+}
+
+.dropzone {
+  border: 2px dashed #888;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.dropzone.dragging {
+  background: #f0f8ff;
+  border-color: #007bff;
+}
+
+.upload-button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.file-list ul,
+.results ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.convert-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  background: #28a745;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.convert-button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.results button {
+  margin-bottom: 0.5rem;
+}
