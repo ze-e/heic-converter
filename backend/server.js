@@ -123,8 +123,8 @@ app.post('/api/convert', upload.array('files'), async (req, res) => {
 // Serve converted files
 app.use('/converted', express.static(convertedDir));
 
-// Fallback to index.html for any non-API route (SPA support)
-app.get('*', (req, res) => {
+// SPA fallback for any non-API route
+app.get('/*', (req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
 
