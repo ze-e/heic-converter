@@ -25,10 +25,6 @@ app.use(
 const uploadDir = path.join(__dirname, 'uploads');
 const convertedDir = path.join(__dirname, 'converted');
 
-const publicDir = path.join(__dirname, 'public');
-app.use(express.static(publicDir));
-
-
 // Ensure directories exist
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 if (!fs.existsSync(convertedDir)) fs.mkdirSync(convertedDir);
@@ -123,8 +119,12 @@ app.post('/api/convert', upload.array('files'), async (req, res) => {
 // Serve converted files
 app.use('/converted', express.static(convertedDir));
 
-// SPA fallback for any non-API route
-app.get('/*', (req, res) => {
+// Serve frontend static files
+const publicDir = path.join(__dirname, 'public');
+app.use(express.static(publicDir));
+
+// SPA fallback for any non-API route (using RegExp to avoid path-to-regexp issues)
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
 
