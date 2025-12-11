@@ -4,9 +4,13 @@ import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
 import ffmpeg from 'fluent-ffmpeg';
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import heicConvert from 'heic-convert';
 import { promises as fsp } from 'fs';
 import { fileURLToPath } from 'url';
+
+// Make fluent-ffmpeg use the bundled ffmpeg binary
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
