@@ -141,7 +141,7 @@ const handleConvert = async () => {
   return (
     <div className="app">
       <h1>HEIC & MOV Converter</h1>
-      <p>Convert HEIC → JPG and MOV → MP4 right in your browser.</p>
+      <p>Convert iPhone file formats to more friendly file formats with the click of a button! No sign-up required!</p>
 
       <div
         className={`dropzone ${isDragging ? 'dragging' : ''}`}
