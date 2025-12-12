@@ -6,6 +6,7 @@ function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [results, setResults] = useState([]);
+  const [uploadError, setUploadError] = useState('');
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -29,13 +30,66 @@ function App() {
     addFiles(selectedFiles);
   };
 
-  const addFiles = (newFiles) => {
-    // Filter to HEIC/HEIF/MOV only (optional)
-    const accepted = newFiles.filter((f) =>
-      /\.(heic|heif|mov|qt)$/i.test(f.name)
-    );
-    setFiles((prev) => [...prev, ...accepted]);
-  };
+const addFiles = (newFiles) => {
+  const allowedExt = /\.(heic|heif|mov|qt)$/i;
+
+  const accepted = [];
+  const rejected = [];
+
+  for (const f of newFiles) {
+    if (allowedExt.test(f.name)) accepted.push(f);
+    else rejected.push(f);
+  }
+
+  setFiles((prev) => {
+    const makeKey = (f) => `${f.name}__${f.size}__${f.lastModified}`;
+    const existingKeys = new Set(prev.map(makeKey));
+
+    const uniqueAccepted = [];
+    const duplicateNames = [];
+
+    for (const f of accepted) {
+      const key = makeKey(f);
+      if (existingKeys.has(key)) {
+        duplicateNames.push(f.name);
+      } else {
+        existingKeys.add(key);
+        uniqueAccepted.push(f);
+      }
+    }
+
+    // If everything in this batch was valid but all were duplicates, show a helpful message
+    if (accepted.length > 0 && uniqueAccepted.length === 0 && rejected.length === 0) {
+      const shown = duplicateNames.slice(0, 5);
+      const more = Math.max(0, duplicateNames.length - shown.length);
+      setUploadError(
+        `Duplicate file(s) ignored: ${shown.join(', ')}${more ? ` (and ${more} more)` : ''}.`
+      );
+    } else if (rejected.length) {
+      // Unsupported types message (takes priority)
+      const rejectedNames = rejected.map((f) => f.name).slice(0, 5);
+      const moreCount = Math.max(0, rejected.length - rejectedNames.length);
+      setUploadError(
+        `Unsupported file type: ${rejectedNames.join(', ')}${
+          moreCount ? ` (and ${moreCount} more)` : ''
+        }. Please upload HEIC/HEIF or MOV files.`
+      );
+    } else if (duplicateNames.length) {
+      // Valid files were added, but some duplicates were ignored
+      const shown = duplicateNames.slice(0, 5);
+      const more = Math.max(0, duplicateNames.length - shown.length);
+      setUploadError(
+        `Some duplicate file(s) were ignored: ${shown.join(', ')}${more ? ` (and ${more} more)` : ''}.`
+      );
+    } else {
+      // All good: clear error
+      setUploadError('');
+    }
+
+    return [...prev, ...uniqueAccepted];
+  });
+};
+
 
 const handleConvert = async () => {
   if (!files.length) return;
@@ -61,6 +115,7 @@ const handleConvert = async () => {
 
     // Reset the "Files to convert" list after successful conversion
     setFiles([]);
+    setUploadError('');
   } catch (err) {
     console.error(err);
     alert('Conversion failed. Check console for details.');
@@ -107,6 +162,8 @@ const handleConvert = async () => {
           />
         </label>
       </div>
+
+      {uploadError && <div className="error-banner">{uploadError}</div>}
 
 {files.length > 0 && (
   <div className="file-list">
