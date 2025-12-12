@@ -37,34 +37,38 @@ function App() {
     setFiles((prev) => [...prev, ...accepted]);
   };
 
-  const handleConvert = async () => {
-    if (!files.length) return;
+const handleConvert = async () => {
+  if (!files.length) return;
 
-    setIsUploading(true);
-    setResults([]);
+  setIsUploading(true);
+  setResults([]);
 
-    const formData = new FormData();
-    files.forEach((f) => formData.append('files', f));
+  const formData = new FormData();
+  files.forEach((f) => formData.append('files', f));
 
-    try {
-      const res = await fetch('/api/convert', {
-        method: 'POST',
-        body: formData,
-      });
+  try {
+    const res = await fetch('/api/convert', {
+      method: 'POST',
+      body: formData,
+    });
 
-      if (!res.ok) {
-        throw new Error(`Server error: ${res.status}`);
-      }
-
-      const data = await res.json();
-      setResults(data.files || []);
-    } catch (err) {
-      console.error(err);
-      alert('Conversion failed. Check console for details.');
-    } finally {
-      setIsUploading(false);
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
     }
-  };
+
+    const data = await res.json();
+    setResults(data.files || []);
+
+    // Reset the "Files to convert" list after successful conversion
+    setFiles([]);
+  } catch (err) {
+    console.error(err);
+    alert('Conversion failed. Check console for details.');
+  } finally {
+    setIsUploading(false);
+  }
+};
+
 
   const handleDownloadAll = () => {
     results
