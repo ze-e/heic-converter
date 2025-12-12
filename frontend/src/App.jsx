@@ -108,16 +108,27 @@ const handleConvert = async () => {
         </label>
       </div>
 
-      {files.length > 0 && (
-        <div className="file-list">
-          <h2>Files to convert ({files.length})</h2>
-          <ul>
-            {files.map((file, idx) => (
-              <li key={idx}>{file.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+{files.length > 0 && (
+  <div className="file-list">
+    <h2>Files to convert ({files.length})</h2>
+    <ul>
+      {files.map((file, idx) => (
+        <li key={idx} className="file-item">
+          <span className="file-name">{file.name}</span>
+          <button
+            className="remove-file"
+            onClick={() =>
+              setFiles((prev) => prev.filter((_, i) => i !== idx))
+            }
+            aria-label={`Remove ${file.name}`}
+          >
+            ×
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
 
       <button
         className="convert-button"
