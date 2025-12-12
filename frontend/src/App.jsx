@@ -131,20 +131,26 @@ const handleConvert = async () => {
         <div className="results">
           <h2>Converted Files</h2>
           <button onClick={handleDownloadAll}>Download All</button>
-          <ul>
-            {results.map((r, idx) => (
-              <li key={idx}>
-                <strong>{r.originalName}</strong> →{' '}
-                {r.type === 'unsupported' ? (
-                  <span>{r.message}</span>
-                ) : (
-                  <a href={r.url} download={r.convertedName}>
-                    {r.convertedName}
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
+      <ul>
+        {results.map((r, idx) => (
+          <li key={idx}>
+            <strong>{r.originalName}</strong>{' '}
+            {r.type === 'image' || r.type === 'video' ? (
+              <>
+                →{' '}
+                <a href={r.url} download={r.convertedName}>
+                  {r.convertedName}
+                </a>
+              </>
+            ) : (
+              <span className="error-text">
+                — Conversion failed{r.message ? `: ${r.message}` : ''}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+
         </div>
       )}
     </div>
