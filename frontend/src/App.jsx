@@ -221,6 +221,9 @@ const handleConvert = async () => {
 
         </div>
       )}
+      <footer className="copyright">
+        © {new Date().getFullYear()} Z Rex Rodriguez
+      </footer>
     </div>
   );
 }

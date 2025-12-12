@@ -93,3 +93,11 @@
   border-radius: 6px;
   font-weight: 600;
 }
+
+.copyright {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #777;
+}
+
